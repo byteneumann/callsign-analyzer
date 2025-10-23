@@ -1,0 +1,20 @@
+{{ define "main" }}
+<section class="hero">
+  <h2 class="caption">Enter a callsign to analyze</h2>
+
+  <div class="input-row">
+    <input id="callsign-input" class="callsign-input" type="text" placeholder="e.g. K1ABC" aria-label="Callsign input" />
+    <button id="analyze-btn" class="btn">Analyze</button>
+  </div>
+
+  <div id="results" class="results" aria-live="polite">
+    <h3 id="results-title" class="results-title">Results</h3>
+
+    <p id="results-caption" class="results-caption">(no analysis yet)</p>
+
+    <div id="results-text" class="results-text">
+      <p>Analysis details will appear here after you click Analyze.</p>
+    </div>
+  </div>
+</section>
+{{ end }}

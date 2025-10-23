@@ -1,0 +1,18 @@
+{{ define "main" }}
+<section class="taxonomy-terms">
+  <header>
+    <h1>{{ .Title }}</h1>
+    <p class="lead">Available {{ .Kind }} for this site</p>
+  </header>
+
+  {{ $tax := .Site.Taxonomies }}
+  {{ range $name, $terms := $tax }}
+    <h2>{{ $name | title }}</h2>
+    <ul>
+      {{ range $term, $pages := $terms }}
+        <li><a href="{{ (index $pages 0).Site.BaseURL | relURL }}{{ $name }}/{{ $term | urlize }}/">{{ $term }} ({{ len $pages }})</a></li>
+      {{ end }}
+    </ul>
+  {{ end }}
+</section>
+{{ end }}
