@@ -11,30 +11,30 @@
 </head>
 <body>
   <header class="site-header">
-    <div class="container">
+    <section class="container section-content-center">
       <h1 class="site-title"><a href="/">Callsign Analyzer</a></h1>
-    </div>
+    </section>
   </header>
 
   <main class="container">
     
-<section class="hero">
-  <h2 class="caption">Enter a callsign to analyze</h2>
+<section class="section-content-center">
+    <h2>Enter a callsign to analyze</h2>
 
-  <div class="input-row">
-    <input id="callsign-input" class="callsign-input" type="text" placeholder="e.g. K1ABC" aria-label="Callsign input" />
-    <button id="analyze-btn" class="btn">Analyze</button>
-  </div>
+    <fieldset style="width: 100%;">
+        <input id="callsign-input" type="text" placeholder="e.g. K1ABC" aria-label="Callsign input" style="text-align: center;" />
+        <button id="analyze-btn">Analyze</button>
+    </fieldset>
+</section>
 
-  <div id="results" class="results" aria-live="polite">
-    <h3 id="results-title" class="results-title">Results</h3>
+<section id="results" aria-live="polite">
+    <h3 id="results-title">Results</h3>
 
-    <p id="results-caption" class="results-caption">(no analysis yet)</p>
+    <p id="results-caption">(no analysis yet)</p>
 
-    <div id="results-text" class="results-text">
-      <p>Analysis details will appear here after you click Analyze.</p>
+    <div id="results-text">
+        <p>Analysis details will appear here after you click Analyze.</p>
     </div>
-  </div>
 </section>
 
   </main>
