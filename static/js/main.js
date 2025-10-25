@@ -1,86 +1,88 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const input = document.getElementById('callsign-input');
-    const btn = document.getElementById('analyze-btn');
-    const results = document.getElementById('results');
-  
-    function beginSection() {
-      return '<section>';
+  const input = document.getElementById('callsign-input');
+  const btn = document.getElementById('analyze-btn');
+  const results = document.getElementById('results');
+
+  function beginSection(title) {
+    let html = '<section>'
+    html += `<h2>${title}</h2>`;
+    return html;
+  }
+
+  function endSection() {
+    let html = '';
+    html += '</section>';
+    return html;
+  }
+
+  function addMetric(name, value, interpretation, explanation) {
+    let html = '';
+    html += `<h3>${name}: ${value} (${interpretation})</h3>`;
+    html += `<span>${explanation}</span>`;
+    return html;
+  }
+
+  function addFinding(name, findings, interpretation, explanation) {
+    let html = '';
+    html += `<h3>${name}: ${interpretation}</h3>`;
+    html += '<ul>';
+    for (f of findings) {
+      html += `<li>${f}</li>`;
+    }
+    html += '</ul>';
+    html += `<span>${explanation}</span>`;
+    return html;
+  }
+
+  function good(text) {
+    return `<span class="good">${text}</span>`;
+  }
+
+  function bad(text) {
+    return `<span class="bad">${text}</span>`;
+  }
+
+  function warning(text) {
+    return `<span class="warning">${text}</span>`;
+  }
+
+  function run(raw) {
+    // normalize input
+    const callsign = (raw || '').trim().toUpperCase();
+
+    // check for invalid input
+    if (!callsign) {
+      return null;
     }
 
-    function endSection() {
-      return '</section>';
-    }
+    // calculate metrics and build report
+    let html = '';
 
-    function addHeading(title) {
-      return `<h2>${title}</h2>`;
-    }
+    html += beginSection('General');
+    html += addMetric('✅ Length', callsign.length, good('good'), '<p>The syntactic length of the callsign is the number of letters.</p>');
+    html += addFinding('❌ Operating Signals', [`${bad('QRP')} means reduced power`], bad('found'), '<p>.</p>');
+    html += endSection();
 
-    function beginTable(header) {
-      let html = '<table>';
-      html += '<tr>';
-      for (let h of header) {
-        html += `<td>${h}</td>`
-      }
-      html += '</tr>';
-      return html;
-    }
+    html += beginSection('Voice');
+    html += endSection();
 
-    function endTable() {
-      return '</table>';
-    }
+    html += beginSection('Digital');
+    html += endSection();
 
-    function simpleAnalyze(callsign) {
-      const value = (callsign || '').trim();
-      if (!value) {
-        return null;
-      }
-  
-      const canonical = value.toUpperCase();
-      const letters = (canonical.match(/[A-Z]/g) || []).length;
-      const digits = (canonical.match(/[0-9]/g) || []).length;
-      const hyphens = (canonical.match(/-/g) || []).length;
-      const validChars = /^[A-Z0-9-]+$/i.test(canonical);
-  
-      // Basic heuristic: a callsign often has letters and digits; show some sample messages
-      const probableType = (digits > 0 && letters > 0) ? 'Standard callsign-like' : 'Unusual format';
-  
-      let html = '';
+    return html;
+  }
 
-      html += beginSection();
-      html += addHeading('General');
-      html += endSection();
+  function analyze() {
+    const result = run(input.value);
+    if (result) {
+      results.innerHTML = '<br><hr>' + result;
+    }
+  }
 
-      html += beginSection();
-      html += addHeading('Voice');
-      html += endSection();
-
-      html += beginSection();
-      html += addHeading('Digital');
-      html += endSection();
-  
-      return html;
+  btn.addEventListener('click', analyze);
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+      analyze();
     }
-  
-    function escapeHtml(s) {
-      return String(s)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
-  
-    function runAnalysis() {
-      const result = simpleAnalyze(input.value);
-      if (result) {
-        results.innerHTML = result;
-      }
-    }
-  
-    btn.addEventListener('click', runAnalysis);
-    input.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') {
-        runAnalysis();
-      }
-    });
   });
+});
