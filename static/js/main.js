@@ -1,16 +1,38 @@
 document.addEventListener('DOMContentLoaded', function () {
     const input = document.getElementById('callsign-input');
     const btn = document.getElementById('analyze-btn');
-    const captionEl = document.getElementById('results-caption');
-    const textEl = document.getElementById('results-text');
+    const results = document.getElementById('results');
   
-    function simpleAnalyze(raw) {
-      const value = (raw || '').trim();
+    function beginSection() {
+      return '<section>';
+    }
+
+    function endSection() {
+      return '</section>';
+    }
+
+    function addHeading(title) {
+      return `<h2>${title}</h2>`;
+    }
+
+    function beginTable(header) {
+      let html = '<table>';
+      html += '<tr>';
+      for (let h of header) {
+        html += `<td>${h}</td>`
+      }
+      html += '</tr>';
+      return html;
+    }
+
+    function endTable() {
+      return '</table>';
+    }
+
+    function simpleAnalyze(callsign) {
+      const value = (callsign || '').trim();
       if (!value) {
-        return {
-          caption: 'No callsign provided',
-          html: '<em>Please enter a callsign above and press Analyze.</em>'
-        };
+        return null;
       }
   
       const canonical = value.toUpperCase();
@@ -23,26 +45,20 @@ document.addEventListener('DOMContentLoaded', function () {
       const probableType = (digits > 0 && letters > 0) ? 'Standard callsign-like' : 'Unusual format';
   
       let html = '';
-      html += '<strong>Canonical:</strong> ' + escapeHtml(canonical) + '<br>';
-      html += '<strong>Length:</strong> ' + canonical.length + ' characters<br>';
-      html += '<strong>Letters:</strong> ' + letters + '<br>';
-      html += '<strong>Digits:</strong> ' + digits + '<br>';
-      html += '<strong>Hyphens:</strong> ' + hyphens + '<br>';
-      html += '<strong>Valid characters (A–Z, 0–9, -):</strong> ' + (validChars ? 'Yes' : 'No') + '<br>';
-      html += '<strong>Heuristic:</strong> ' + probableType + '<br>';
+
+      html += beginSection();
+      html += addHeading('General');
+      html += endSection();
+
+      html += beginSection();
+      html += addHeading('Voice');
+      html += endSection();
+
+      html += beginSection();
+      html += addHeading('Digital');
+      html += endSection();
   
-      // Example suggestions
-      html += '<hr>';
-      if (probableType === 'Standard callsign-like') {
-        html += '<em>Tip:</em> Looks like a normal callsign. You can use this site to add more checks or lookups.';
-      } else {
-        html += '<em>Tip:</em> Consider removing spaces or special characters if this is intended to be a callsign.';
-      }
-  
-      return {
-        caption: 'Analysis for "' + escapeHtml(canonical) + '"',
-        html
-      };
+      return html;
     }
   
     function escapeHtml(s) {
@@ -56,8 +72,9 @@ document.addEventListener('DOMContentLoaded', function () {
   
     function runAnalysis() {
       const result = simpleAnalyze(input.value);
-      captionEl.textContent = result.caption;
-      textEl.innerHTML = result.html;
+      if (result) {
+        results.innerHTML = result;
+      }
     }
   
     btn.addEventListener('click', runAnalysis);

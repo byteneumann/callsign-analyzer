@@ -31,7 +31,7 @@ html {
    - on wide screens it uses a fixed width (--site-width)
    - on narrow screens it falls back to fluid width with side padding
 */
-.container {
+header, main, footer {
   width: var(--site-width);
   max-width: calc(100% - (var(--site-gutter) * 2));
   margin-left: auto;
@@ -40,6 +40,7 @@ html {
   margin-bottom: 48px;
   padding-left: var(--site-gutter);
   padding-right: var(--site-gutter);
+  text-align: justify;
 }
 
 /* Keep the rest of the original terminal stylesheet intact */
@@ -417,16 +418,6 @@ button {
   }
 }
 
-/* Center inside a section block horizontally */
-.section-content-center {
+header {
   text-align: center;
-}
-
-@media (max-width: 720px) {
-  .section-centered,
-  .terminal-panel {
-    width: 100%;
-    padding-left: var(--site-gutter);
-    padding-right: var(--site-gutter);
-  }
 }

@@ -1,20 +1,62 @@
 {{ define "main" }}
 <section class="section-content-center">
-    <h2>Enter a callsign to analyze</h2>
-
     <fieldset style="width: 100%;">
-        <input id="callsign-input" type="text" placeholder="e.g. K1ABC" aria-label="Callsign input" style="text-align: center;" />
+        <input id="callsign-input" type="text" placeholder="e.g. K1ABC" aria-label="Callsign input"
+            style="text-align: center;" />
         <button id="analyze-btn">Analyze</button>
     </fieldset>
 </section>
 
 <section id="results" aria-live="polite">
-    <h3 id="results-title">Results</h3>
+    <br/>
+</section>
 
-    <p id="results-caption">(no analysis yet)</p>
-
-    <div id="results-text">
-        <p>Analysis details will appear here after you click Analyze.</p>
-    </div>
+<hr/>
+<section>
+    <h2>What is a callsign?</h2>
+    <p>
+        In this case, <em>callsign</em> refer to an amateur radio callsigns.
+        This tool is designed for ham radio operators.
+        Callsigns are (to large extent) composed of
+    <ul>
+        <li>a Latin prefix representing the country</li>
+        <li>an Arabic number</li>
+        <li>and a Latin suffix</li>
+    </ul>
+    The meaning of each part differs across countries and is irrelevant here.
+    </p>
+    <h2>What is analyzed?</h2>
+    <p>
+        The callsign is measured and classified using various metrics.
+        These metrics are indicators that can hint at practical aspects, such as ease of spelling and ease of remembering.
+    </p>
+    <h2>How is it done?</h2>
+    <p>
+        We apply techniques from the field of natural language processing (NLP).
+        The callsign is not analyzed based on syntax alone.
+        Rather, it is translated into a phonetic transcription.
+        This allows us to provide pronunciation-related information as well.
+    </p>
+    <h2>Why was is done?</h2>
+    <p>
+        Callsigns can be a means of self-expression or of delivering a message, but they can also have negative side effects, both practically and socially.
+    </p>
+    <h3>Examples</h3>
+    <table>
+        <tr>
+            <th>Good</th>
+            <th>Suboptimal</th>
+        </tr>
+        <tr>
+            <td>DO8BIT<br/>(reference to 8-bit computing)</td>
+            <td>K1QRP<br/>(contains operating signal)</td>
+        </tr>
+    </table>
+    *Disclaimer: I did not intend to address any specific individuals in the displayed example call signs, which may be issued.
+    The metrics used here are highly subjective, though the calculations are objective.
+    <p>
+        This tool is designed to help you choose a callsign wisely.
+        For those interested, it provides a quick report that makes iterating ideas much easier and more systematic.
+    </p>
 </section>
 {{ end }}
