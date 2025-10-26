@@ -98,6 +98,10 @@ table {
   margin: 25px 0;
 }
 
+ul {
+  list-style: none;
+}
+
 a {
   color: var(--accent);
 }
@@ -432,6 +436,6 @@ header {
   color: crimson;
 }
 
-warning {
+.warning {
   color: darkorange;
 }

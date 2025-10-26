@@ -1,3 +1,5 @@
+// ✅❌⚠️
+
 document.addEventListener('DOMContentLoaded', function () {
   const input = document.getElementById('callsign-input');
   const btn = document.getElementById('analyze-btn');
@@ -15,55 +17,49 @@ document.addEventListener('DOMContentLoaded', function () {
     return html;
   }
 
-  function addMetric(name, value, interpretation, explanation) {
+  function addMetric(metric) {
     let html = '';
-    html += `<h3>${name}: ${value} (${interpretation})</h3>`;
-    html += `<span>${explanation}</span>`;
+    html += `<h3>${metric.emoji} ${metric.name}`;
+    if (metric.interpretation) {
+      html += `: ${metric.value} (${metric.interpretation})`;
+    }
+    html += '</h3>';
+    html += `<span>${metric.explanation}</span>`;
     return html;
   }
 
-  function addFinding(name, findings, interpretation, explanation) {
+  function addFinding(finding) {
     let html = '';
-    html += `<h3>${name}: ${interpretation}</h3>`;
+    html += `<h3>${metric.emoji} ${finding.name}`;
+    if (finding.interpretation) {
+      html += `: ${finding.interpretation}`;
+    }
+    html += '</h3>';
     html += '<ul>';
-    for (f of findings) {
+    for (f of finding.findings) {
       html += `<li>${f}</li>`;
     }
     html += '</ul>';
-    html += `<span>${explanation}</span>`;
+    html += `<span>${finding.explanation}</span>`;
     return html;
   }
 
-  function good(text) {
-    return `<span class="good">${text}</span>`;
-  }
-
-  function bad(text) {
-    return `<span class="bad">${text}</span>`;
-  }
-
-  function warning(text) {
-    return `<span class="warning">${text}</span>`;
-  }
-
-  function run(raw) {
-    // normalize input
-    const callsign = (raw || '').trim().toUpperCase();
-
-    // check for invalid input
-    if (!callsign) {
-      return null;
-    }
-
+  function run(callsign) {
     // calculate metrics and build report
     let html = '';
 
-    html += beginSection('General');
-    html += addMetric('✅ Length', callsign.length, good('good'), '<p>The syntactic length of the callsign is the number of letters.</p>');
-    html += addFinding('❌ Operating Signals', [`${bad('QRP')} means reduced power`], bad('found'), '<p>.</p>');
+    html += beginSection('Syntax');
+    html += addMetric(syntacticLength(callsign));
+    html += addFinding(syntacticSymmetry(callsign));
+    //TODO html += addFinding('❌ Operating Signals', [`${bad('QRP')} means reduced power`], bad('found'), '<p>.</p>');
+    //TODO three consonants, long spelling, binding of words (vowel-consonant alternating
     html += endSection();
 
-    html += beginSection('Voice');
+    html += beginSection('Phonology');
+    html += addFinding(phoneticTranscriptEnglish(callsign));
+    html += addFinding(phoneticTranscriptIcao(callsign));
+    //TODO "alternative" phonetic alphabet
+    //TODO misleading: sugar papa, whiskey = alcohol
     html += endSection();
 
     html += beginSection('Digital');
@@ -73,9 +69,24 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function analyze() {
-    const result = run(input.value);
-    if (result) {
-      results.innerHTML = '<br><hr>' + result;
+    // normalize input
+    const callsign = (input.value || '').trim().toUpperCase();
+
+    // check for invalid input
+    if (!callsign) {
+      results.innerHTML = '<br><hr>Sorry, I can not analyze this.';
+      return;
+    }
+
+    try {
+      const result = run(callsign);
+      if (result) {
+        input.value = callsign;
+        results.innerHTML = '<br><hr>' + result;
+      }
+    } catch (e) {
+      results.innerHTML = '<br><hr><p>☠️ Oh no! I got an error during analysis!</p>';
+      console.error(e);
     }
   }
 
