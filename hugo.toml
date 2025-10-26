@@ -1,4 +1,8 @@
-baseURL = "http://example.org/"
+baseURL = "https://byteneumann.github.io/"
 languageCode = "en-us"
 title = "Callsign Analyzer"
 theme = "terminal"
+
+[caches]
+  [caches.images]
+    dir = ':cacheDir/images'
