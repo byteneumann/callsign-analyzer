@@ -38,3 +38,8 @@ function editDistance(a, b) {
 function reverse(s){
     return [...s].reverse().join("");
 }
+
+function splitCallsign(callsign) {
+    [callsign, prefix, numbers, suffix] = callsign.match(/([A-Z]+)([0-9]+)([A-Z]+)/)
+    return [callsign, prefix, numbers, suffix];
+}

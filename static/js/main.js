@@ -24,13 +24,17 @@ document.addEventListener('DOMContentLoaded', function () {
       html += `: ${metric.value} (${metric.interpretation})`;
     }
     html += '</h3>';
-    html += `<span>${metric.explanation}</span>`;
+    html += `<small>${metric.explanation}</small>`;
     return html;
   }
 
   function addFinding(finding) {
     let html = '';
-    html += `<h3>${metric.emoji} ${finding.name}`;
+    html += '<h3>';
+    if (finding.emoji) {
+      html += `${finding.emoji} `;
+    }
+    html += `${finding.name}`;
     if (finding.interpretation) {
       html += `: ${finding.interpretation}`;
     }
@@ -40,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
       html += `<li>${f}</li>`;
     }
     html += '</ul>';
-    html += `<span>${finding.explanation}</span>`;
+    html += `<small>${finding.explanation}</small>`;
     return html;
   }
 
@@ -51,7 +55,6 @@ document.addEventListener('DOMContentLoaded', function () {
     html += beginSection('Syntax');
     html += addMetric(syntacticLength(callsign));
     html += addFinding(syntacticSymmetry(callsign));
-    //TODO html += addFinding('❌ Operating Signals', [`${bad('QRP')} means reduced power`], bad('found'), '<p>.</p>');
     //TODO three consonants, long spelling, binding of words (vowel-consonant alternating
     html += endSection();
 
@@ -62,7 +65,9 @@ document.addEventListener('DOMContentLoaded', function () {
     //TODO misleading: sugar papa, whiskey = alcohol
     html += endSection();
 
-    html += beginSection('Digital');
+    html += beginSection('Operation');
+    html += addFinding(operationOperatingSignals(callsign));
+    html += addFinding(operationCommonTerms(callsign));
     html += endSection();
 
     return html;
