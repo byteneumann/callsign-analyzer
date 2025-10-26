@@ -15,7 +15,7 @@ class Finding {
 }
 
 function syntacticLength(callsign) {
-    metric = new Metric();
+    let metric = new Metric();
     metric.name = 'Length';
     metric.value = callsign.length;
     if (metric.value <= 3) {
@@ -39,12 +39,12 @@ function syntacticLength(callsign) {
 };
 
 function syntacticSymmetry(callsign) {
-    finding = new Finding();
+    let finding = new Finding();
     finding.name = 'Symmetry';
 
     let num_good = 0;
     let num_bad = 0;
-    [callsign, prefix, numbers, suffix] = splitCallsign(callsign);
+    const [_, prefix, numbers, suffix] = splitCallsign(callsign);
     {
         const symmetry = prefix.length - suffix.length;
         if (symmetry == 0) {
@@ -74,38 +74,54 @@ function syntacticSymmetry(callsign) {
     return finding;
 };
 
-function phoneticTranscriptEnglish(callsign) {
-    finding = new Finding();
-    finding.name = 'English spelling';
+function phoneticAnalysis(finding, callsign, transcript) {
+    let num_problems = 0;
+    for (let i = 0; i < transcript.length - 1; ++i) {
+        const phonemeFrom = transcript[i][transcript[i].length - 1];
+        const phonemeTo = transcript[i + 1][0];
+        const phonemeFromClass = phoneticAlphabetArpa[phonemeFrom];
+        const phonemeToClass = phoneticAlphabetArpa[phonemeTo];
+        if (phonemeFromClass == phonemeToClass) {
+            finding.findings.push(`⚠️ Two consecutive ${phonemeFromClass}s found here: ${callsign[i].substring(0, callsign[i].length - 1)}<span style="text-decoration: dashed underline">${callsign[i][callsign[i].length - 1]} ${callsign[i + 1][0]}</span>${callsign[i + 1].substring(1)}`);
+            num_problems += 1;
+        }
+    }
 
-    const ipaTranscript = transcribeIpa(callsign);
-    const arpaTranscript = transcribeArpa(callsign);
-    finding.findings.push(`IPA transcript: [${ipaTranscript}]`);
-
-    //finding.emoji = num_bad == 0 ? '✅' : '⚠️';
-    //finding.interpretation = `${num_good} positive, ${num_bad} negative`;
+    finding.emoji = num_problems == 0 ? '✅' : '⚠️';
+    finding.interpretation = '';
     finding.explanation = '';
     return finding;
+}
+
+function phoneticTranscriptEnglish(callsign) {
+    let finding = new Finding();
+    finding.name = 'English spelling';
+
+    const callsign_tokens = callsign.split('')
+
+    const ipaTranscript = transcribeIpa(callsign_tokens);
+    const arpaTranscript = transcribeArpa(callsign_tokens);
+    finding.findings.push(`IPA transcript: [${ipaTranscript.join(' ')}]`);
+
+    return phoneticAnalysis(finding, callsign_tokens, arpaTranscript);
 }
 
 function phoneticTranscriptIcao(callsign) {
-    finding = new Finding();
+    let finding = new Finding();
     finding.name = 'NATO spelling alphabet';
 
-    callsign_icao = toIcao(callsign);
+    const callsign_icao = toIcao(callsign.split(''));
 
-    const ipaTranscript = transcribeIpa(callsign_icao, ' ');
-    const arpaTranscript = transcribeArpa(callsign_icao, ' ');
-    finding.findings.push(`IPA transcript: [${ipaTranscript}]`);
+    const ipaTranscript = transcribeIpa(callsign_icao);
+    const arpaTranscript = transcribeArpa(callsign_icao);
+    finding.findings.push(`NATO spelling: ${callsign_icao.join(' ')}`);
+    finding.findings.push(`IPA transcript: [${ipaTranscript.join(' ')}]`);
 
-    //finding.emoji = num_bad == 0 ? '✅' : '⚠️';
-    //finding.interpretation = `${num_good} positive, ${num_bad} negative`;
-    finding.explanation = '';
-    return finding;
+    return phoneticAnalysis(finding, callsign_icao, arpaTranscript);
 }
 
 function operationOperatingSignals(callsign) {
-    finding = new Finding();
+    let finding = new Finding();
     finding.name = 'Operating signals';
 
     const operatingSignals = [
@@ -229,8 +245,8 @@ function operationOperatingSignals(callsign) {
 
     let num_critical = 0;
     let num_warnings = 0;
-    [callsign, prefix, numbers, suffix] = splitCallsign(callsign);
-    personal = numbers + suffix;
+    const [_, prefix, numbers, suffix] = splitCallsign(callsign);
+    const personal = numbers + suffix;
     for ([severity, code, source, meaning] of operatingSignals) {
         if (personal.includes(code)) {
             let f = '';
@@ -256,7 +272,7 @@ function operationOperatingSignals(callsign) {
 }
 
 function operationCommonTerms(callsign) {
-    finding = new Finding();
+    let finding = new Finding();
     finding.name = 'Common terms';
 
     let num_found = 0;
@@ -282,6 +298,13 @@ function operationCommonTerms(callsign) {
         ['UFO', '"unidentified flight object"'],
         ['SWL', '"short wave listener"'],
         ['FM', 'frequency modulation'],
+        ['AM', 'amplitude modulation'],
+        ['FSK', 'frequency shift keying'],
+        ['PSK', 'phase shift keying'],
+        ['IQ', 'I/Q modulation'],
+        ['EME', 'earth-moon-earth'],
+        ['TEST', 'contest'],
+        ['USB', 'univeral serial bus'],
         ['VHF', 'very high frequency band'],
         ['UHF', 'ultra high frequency band'],
         ['SHF', 'super high frequency band'],
@@ -299,7 +322,13 @@ function operationCommonTerms(callsign) {
         ['CIA', 'agency of the United States of America'],
         ['FCC', 'agency of the United States of America'],
         ['NASA', 'agency of the United States of America'],
-        ['FBI', 'agency of the United States of America']
+        ['FBI', 'agency of the United States of America'],
+        ['CPU', 'central processing unit'],
+        ['OHM', 'unit of electrical resistance'],
+        ['AMP', 'amplifier'],
+        ['WATT', 'unit of power'],
+        ['KW', 'kilowatt'],
+        ['BNC', 'radio frequency connector'],
     ];
     for ([code, meaning] of commonTerms) {
         if (callsign.includes(code)) {

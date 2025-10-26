@@ -55,19 +55,19 @@ document.addEventListener('DOMContentLoaded', function () {
     html += beginSection('Syntax');
     html += addMetric(syntacticLength(callsign));
     html += addFinding(syntacticSymmetry(callsign));
-    //TODO three consonants, long spelling, binding of words (vowel-consonant alternating
     html += endSection();
-
+    
     html += beginSection('Phonology');
     html += addFinding(phoneticTranscriptEnglish(callsign));
     html += addFinding(phoneticTranscriptIcao(callsign));
+    //TODO three consonants, long spelling
     //TODO "alternative" phonetic alphabet
-    //TODO misleading: sugar papa, whiskey = alcohol
     html += endSection();
-
+    
     html += beginSection('Operation');
     html += addFinding(operationOperatingSignals(callsign));
     html += addFinding(operationCommonTerms(callsign));
+    //TODO misleading: sugar papa, whiskey = alcohol
     html += endSection();
 
     return html;

@@ -46,7 +46,7 @@ const phoneticDictionaryEnglish = {
     'charlie': ['ˈtʃali', 'CH AA R L IY'],
     'delta': ['ˈdɛlta', 'D EH L T AH'],
     'echo': ['ˈɛko', 'EH K OW'],
-    'foxtrot': ['ˈfɔkstrɔt]', 'F AA K S T R AA T'],
+    'foxtrot': ['ˈfɔkstrɔt', 'F AA K S T R AA T'],
     'golf': ['ˈɡɔlf', 'G AA L F'],
     'hotel': ['hoˈtɛl', 'HH OW T EH L'],
     'india': ['ˈɪndia', 'IH N D IY AH'],
@@ -161,13 +161,13 @@ const icaoAlphabet = {
 };
 
 function transcribeIpa(s, separator='') {
-    return s.split(separator).map(c => phoneticDictionaryEnglish[c][0]).join(' ');
+    return s.map(c => phoneticDictionaryEnglish[c][0]);
 }
 
 function transcribeArpa(s, separator='') {
-    return s.split(separator).map(c => phoneticDictionaryEnglish[c][1]).join(' ');
+    return s.map(c => phoneticDictionaryEnglish[c][1].split(' '));
 }
 
 function toIcao(s) {
-    return s.split('').map(c => icaoAlphabet[c]).join(' ');
+    return s.map(c => icaoAlphabet[c]);
 }
