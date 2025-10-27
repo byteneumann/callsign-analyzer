@@ -98,10 +98,6 @@ table {
   margin: 25px 0;
 }
 
-ul {
-  list-style: none;
-}
-
 a {
   color: var(--accent);
 }
@@ -428,14 +424,35 @@ header {
   text-transform: uppercase;
 }
 
+.callsign-banner {
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: white;
+  padding-top: 1.3em;
+}
+
+.callsign-banner h2 {
+  margin: 0;
+  padding-bottom: 1em;
+}
+
 .good {
   color: darkgreen;
+  font-weight: 500;
 }
 
 .bad {
   color: crimson;
+  font-weight: 500;
 }
 
 .warning {
   color: darkorange;
+  font-weight: 500;
+}
+
+#results ul {
+  list-style: none;
 }

@@ -4,7 +4,7 @@
 <meta name="description" content="{{ with .Site.Params.description }}{{ . }}{{ end }}">
 {{ $cssMain := resources.Get "css/main.css" }}
 <link rel="stylesheet" type="text/css" href="{{ $cssMain.RelPermalink }}">
-<script src="/js/helper.js" defer></script>
-<script src="/js/phonetic.js" defer></script>
-<script src="/js/metrics.js" defer></script>
-<script src="/js/main.js" defer></script>
+<script src="{{ "js/helper.js" | urlize | relURL }}" defer></script>
+<script src="{{ "js/phonetic.js" | urlize | relURL }}" defer></script>
+<script src="{{ "js/metrics.js" | urlize | relURL }}" defer></script>
+<script src="{{ "js/main.js" | urlize | relURL }}" defer></script>

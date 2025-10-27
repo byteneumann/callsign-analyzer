@@ -5,6 +5,10 @@ document.addEventListener('DOMContentLoaded', function () {
   const btn = document.getElementById('analyze-btn');
   const results = document.getElementById('results');
 
+  function showCallsign(callsign) {
+    return `<section class="callsign-banner"><h2>${callsign}</h2><hr></section>`;
+  }
+
   function beginSection(title) {
     let html = '<section>'
     html += `<h2>${title}</h2>`;
@@ -52,6 +56,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // calculate metrics and build report
     let html = '';
 
+    html += showCallsign(callsign);
+
     html += beginSection('Syntax');
     html += addMetric(syntacticLength(callsign));
     html += addFinding(syntacticSymmetry(callsign));
@@ -79,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // check for invalid input
     if (!callsign) {
-      results.innerHTML = '<br><hr>Sorry, I can not analyze this.';
+      results.innerHTML = '<br><hr><p>☠️ Sorry, I can not analyze this.</p><hr>';
       return;
     }
 
@@ -87,10 +93,10 @@ document.addEventListener('DOMContentLoaded', function () {
       const result = run(callsign);
       if (result) {
         input.value = callsign;
-        results.innerHTML = '<br><hr>' + result;
+        results.innerHTML = '<br><hr>' + result + '<hr>';
       }
     } catch (e) {
-      results.innerHTML = '<br><hr><p>☠️ Oh no! I got an error during analysis!</p>';
+      results.innerHTML = '<br><hr><p>☠️ Oh no! I got an error during analysis!</p><hr>';
       console.error(e);
     }
   }

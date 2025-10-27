@@ -1,4 +1,4 @@
-baseURL = "https://byteneumann.github.io/"
+baseURL = "https://byteneumann.github.io/callsign-analyzer/"
 languageCode = "en-us"
 title = "Callsign Analyzer"
 theme = "terminal"
