@@ -145,6 +145,7 @@ const icaoAlphabet = {
     'T': 'tango',
     'U': 'uniform',
     'V': 'victor',
+    'W': 'whiskey',
     'X': 'x-ray',
     'Y': 'yankee',
     'Z': 'zulu',

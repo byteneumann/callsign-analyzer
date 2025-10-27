@@ -65,13 +65,72 @@ function syntacticSymmetry(callsign) {
         } else if (suffix.includes(reverse(prefix))) {
             finding.findings.push(`💡 ${callsign} is nearly a palindrome (${prefix}${numbers}${reverse(prefix)}`);
             num_good += 1;
+        } else if (suffix.startsWith(prefix)) {
+            finding.findings.push(`💡 Suffix repeats the prefix`);
+            num_good += 1;
         }
     }
 
     finding.emoji = num_bad == 0 ? '✅' : '⚠️';
-    finding.interpretation = `${num_good}👍 ${num_bad}👎`;
+    finding.interpretation = `${num_good}👍  ${num_bad}👎`;
     finding.explanation = '';
     return finding;
+};
+
+function phoneticLength(callsign) {
+    let metric = new Metric();
+    metric.name = 'Length';
+
+    const callsign_tokens = callsign.split('')
+    const arpaTranscript = transcribeArpa(callsign_tokens);
+    metric.value = arpaTranscript.map(token => token.length).reduce((a, b) => a + b, 0);
+
+    if (metric.value <= 6) {
+        metric.emoji = '⚠️';
+        metric.interpretation = warning('very short');
+    } else if (metric.value < 10) {
+        metric.emoji = '✅';
+        metric.interpretation = good('short');
+    } else if (metric.value < 14) {
+        metric.emoji = '✅';
+        metric.interpretation = good('normal');
+    } else if (metric.value <= 18) {
+        metric.emoji = '⚠️';
+        metric.interpretation = warning('long');
+    } else {
+        metric.emoji = '⚠️';
+        metric.interpretation = warning('very long');
+    }
+    metric.explanation = '<p>Phonemic length is the number of phonemes.</p>';
+    return metric;
+};
+
+function phoneticLengthIcao(callsign) {
+    let metric = new Metric();
+    metric.name = 'Length';
+
+    const callsign_icao = toIcao(callsign.split(''));
+    const arpaTranscript = transcribeArpa(callsign_icao);
+    metric.value = arpaTranscript.map(token => token.length).reduce((a, b) => a + b, 0);
+
+    if (metric.value <= 12) {
+        metric.emoji = '⚠️';
+        metric.interpretation = warning('very short');
+    } else if (metric.value < 20) {
+        metric.emoji = '✅';
+        metric.interpretation = good('short');
+    } else if (metric.value < 28) {
+        metric.emoji = '✅';
+        metric.interpretation = good('normal');
+    } else if (metric.value <= 36) {
+        metric.emoji = '⚠️';
+        metric.interpretation = warning('long');
+    } else {
+        metric.emoji = '⚠️';
+        metric.interpretation = warning('very long');
+    }
+    metric.explanation = '<p>Phonemic length is the number of letters.</p>';
+    return metric;
 };
 
 function phoneticAnalysis(finding, callsign, transcript) {
@@ -95,27 +154,27 @@ function phoneticAnalysis(finding, callsign, transcript) {
 
 function phoneticTranscriptEnglish(callsign) {
     let finding = new Finding();
-    finding.name = 'English spelling';
+    finding.name = 'Pronunciation';
 
     const callsign_tokens = callsign.split('')
 
     const ipaTranscript = transcribeIpa(callsign_tokens);
     const arpaTranscript = transcribeArpa(callsign_tokens);
-    finding.findings.push(`IPA transcript: [${ipaTranscript.join(' ')}]`);
+    finding.findings.push(`IPA transcript: /${ipaTranscript.join(' ')}/`);
 
     return phoneticAnalysis(finding, callsign_tokens, arpaTranscript);
 }
 
 function phoneticTranscriptIcao(callsign) {
     let finding = new Finding();
-    finding.name = 'NATO spelling alphabet';
+    finding.name = 'Pronunciation';
 
     const callsign_icao = toIcao(callsign.split(''));
 
     const ipaTranscript = transcribeIpa(callsign_icao);
     const arpaTranscript = transcribeArpa(callsign_icao);
     finding.findings.push(`NATO spelling: ${callsign_icao.join(' ')}`);
-    finding.findings.push(`IPA transcript: [${ipaTranscript.join(' ')}]`);
+    finding.findings.push(`IPA transcript: /${ipaTranscript.join(' ')}/`);
 
     return phoneticAnalysis(finding, callsign_icao, arpaTranscript);
 }
@@ -277,68 +336,312 @@ function operationCommonTerms(callsign) {
 
     let num_found = 0;
     const commonTerms = [
+        // 📡 Radio Operations & Activities
+        ['HAM', 'amateur radio operator'],
+        ['SWL', '"short wave listener"'],
+        ['TEST', 'contest'],
         ['FOX', 'amateur radio direction finding (fox hunting)'],
-        ['TNX', '"thanks"'],
-        ['BIT', 'unit of information in computing'],
-        ['BYTE', 'unit of information in computing'],
         ['SAT', 'satellite operation'],
-        ['ICOM', 'Japanese manufacturer of radio equipment'],
-        ['DL', 'Germany'],
+        ['TNX', '"thanks"'],
+        ['55', 'good luck'],
+        ['72', 'best regards (low power)'],
+        ['73', 'best regards'],
+        ['OTA', 'on the air'],
+        ['RBN', 'reverse beacon network'],
+        ['NET', 'network or on-air meeting'],
+        ['LOG', 'contact log or logbook'],
+
+        // 🌍 Geography & Regions
         ['USA', 'United States of America'],
+        ['AL', 'State of Alabama (USA)'],
+        ['AK', 'State of Alaska (USA)'],
+        ['AZ', 'State of Arizona (USA)'],
+        ['AR', 'State of Arkansas (USA)'],
+        ['CA', 'State of California (USA)'],
+        ['CO', 'State of Colorado (USA)'],
+        ['CT', 'State of Connecticut (USA)'],
+        ['DE', 'State of Delaware (USA)'],
+        ['FL', 'State of Florida (USA)'],
+        ['GA', 'State of Georgia (USA)'],
+        ['HI', 'State of Hawaii (USA)'],
+        ['ID', 'State of Idaho (USA)'],
+        ['IL', 'State of Illinois (USA)'],
+        ['IN', 'State of Indiana (USA)'],
+        ['IA', 'State of Iowa (USA)'],
+        ['KS', 'State of Kansas (USA)'],
+        ['KY', 'State of Kentucky (USA)'],
+        ['LA', 'State of Louisiana (USA)'],
+        ['ME', 'State of Maine (USA)'],
+        ['MD', 'State of Maryland (USA)'],
+        ['MA', 'State of Massachusetts (USA)'],
+        ['MI', 'State of Michigan (USA)'],
+        ['MN', 'State of Minnesota (USA)'],
+        ['MS', 'State of Mississippi (USA)'],
+        ['MO', 'State of Missouri (USA)'],
+        ['MT', 'State of Montana (USA)'],
+        ['NE', 'State of Nebraska (USA)'],
+        ['NV', 'State of Nevada (USA)'],
+        ['NH', 'State of New Hampshire (USA)'],
+        ['NJ', 'State of New Jersey (USA)'],
+        ['NM', 'State of New Mexico (USA)'],
+        ['NY', 'State of New York (USA)'],
+        ['NC', 'State of North Carolina (USA)'],
+        ['ND', 'State of North Dakota (USA)'],
+        ['OH', 'State of Ohio (USA)'],
+        ['OK', 'State of Oklahoma (USA)'],
+        ['OR', 'State of Oregon (USA)'],
+        ['PA', 'State of Pennsylvania (USA)'],
+        ['RI', 'State of Rhode Island (USA)'],
+        ['SC', 'State of South Carolina (USA)'],
+        ['SD', 'State of South Dakota (USA)'],
+        ['TN', 'State of Tennessee (USA)'],
+        ['TX', 'State of Texas (USA)'],
+        ['UT', 'State of Utah (USA)'],
+        ['VT', 'State of Vermont (USA)'],
+        ['VA', 'State of Virginia (USA)'],
+        ['WA', 'State of Washington (USA)'],
+        ['WV', 'State of West Virginia (USA)'],
+        ['WI', 'State of Wisconsin (USA)'],
+        ['WY', 'State of Wyoming (USA)'],
+        ['NL', 'Netherlands'],
+        ['DK', 'Denmark'],
+        ['US', 'United States'],
+        ['CA', 'Canada'],
+        ['GB', 'United Kingdom'],
+        ['DE', 'Germany'],
+        ['FR', 'France'],
+        ['ES', 'Spain'],
+        ['IT', 'Italy'],
+        ['JP', 'Japan'],
+        ['CN', 'China'],
+        ['RU', 'Russia'],
+        ['BR', 'Brazil'],
+        ['AU', 'Australia'],
+        ['NZ', 'New Zealand'],
+        ['ZA', 'South Africa'],
+        ['IN', 'India'],
+        ['MX', 'Mexico'],
+        ['AR', 'Argentina'],
+        ['CL', 'Chile'],
+        ['CO', 'Colombia'],
+        ['PE', 'Peru'],
+        ['VE', 'Venezuela'],
+        ['EG', 'Egypt'],
+        ['NG', 'Nigeria'],
+        ['KE', 'Kenya'],
+        ['TR', 'Turkey'],
+        ['IL', 'Israel'],
+        ['KR', 'South Korea'],
+        ['TW', 'Taiwan'],
+        ['FI', 'Finland'],
+        ['SE', 'Sweden'],
+        ['NO', 'Norway'],
+        ['PT', 'Portugal'],
+        ['BE', 'Belgium'],
+        ['CH', 'Switzerland'],
+        ['AT', 'Austria'],
+        ['PL', 'Poland'],
         ['NA', 'North America'],
         ['SA', 'South America'],
         ['EU', 'Europe'],
         ['OC', 'Oceania'],
+        ['AF', 'Africa'],
         ['AS', 'Asia'],
-        ['NL', 'Netherlands'],
-        ['DK', 'Denmark'],
-        ['TX', 'State of Texas (USA)'],
-        ['CAL', '"calibration"'],
-        ['TRX', '"transceiver"'],
-        ['UFO', '"unidentified flight object"'],
-        ['SWL', '"short wave listener"'],
-        ['FM', 'frequency modulation'],
+        ['DL', 'Germany (prefix)'],
+        ['JA', 'Japan (prefix)'],
+        ['VE', 'Canada (prefix)'],
+        ['VK', 'Australia (prefix)'],
+        ['ZS', 'South Africa (prefix)'],
+        ['LU', 'Argentina (prefix)'],
+        ['EA', 'Spain (prefix)'],
+        ['F', 'France (prefix)'],
+        ['G', 'England (prefix)'],
+        ['LA', 'Norway (prefix)'],
+        ['OH', 'Finland (prefix)'],
+        ['SM', 'Sweden (prefix)'],
+        ['HB', 'Switzerland (prefix)'],
+        ['SP', 'Poland (prefix)'],
+        ['OE', 'Austria (prefix)'],
+        ['ON', 'Belgium (prefix)'],
+        ['YL', 'Latvia (prefix)'],
+        ['OM', 'Slovakia (prefix)'],
+        ['OK', 'Czech Republic (prefix)'],
+        ['TK', 'Corsica (prefix)'],
+        ['W', 'USA (prefix)'],
+        ['K', 'USA (prefix)'],
+        ['CT', 'Portugal (prefix)'],
+        ['I', 'Italy (prefix)'],
+        ['UA', 'Russia (prefix)'],
+        ['EI', 'Ireland (prefix)'],
+        ['PY', 'Brazil (prefix)'],
+        ['XE', 'Mexico (prefix)'],
+        ['CE', 'Chile (prefix)'],
+        ['CX', 'Uruguay (prefix)'],
+        ['HK', 'Colombia (prefix)'],
+        ['HI', 'Dominican Republic (prefix)'],
+        ['ZL', 'New Zealand (prefix)'],
+        ['OZ', 'Denmark (alternate prefix)'],
+        ['TF', 'Iceland (prefix)'],
+        ['SV', 'Greece (prefix)'],
+        ['LX', 'Luxembourg (prefix)'],
+        ['CN', 'Morocco (prefix)'],
+        ['HP', 'Panama (prefix)'],
+        ['YV', 'Venezuela (prefix)'],
+        ['YT', 'Guadeloupe (prefix)'],
+
+        // 🎙️ Modulation & Transmission Modes
         ['AM', 'amplitude modulation'],
+        ['FM', 'frequency modulation'],
+        ['SSB', 'single side band'],
+        ['USB', 'upper side band'],
+        ['USB', 'univeral serial bus'],
+        ['LSB', 'lower side band'],
+        ['CW', 'continuous wave'],
         ['FSK', 'frequency shift keying'],
         ['PSK', 'phase shift keying'],
         ['IQ', 'I/Q modulation'],
         ['EME', 'earth-moon-earth'],
-        ['TEST', 'contest'],
-        ['USB', 'univeral serial bus'],
+        ['DMR', 'digital mobile radio'],
+
+        // 📶 Frequency Bands
+        ['HF', 'high frequency band'],
         ['VHF', 'very high frequency band'],
         ['UHF', 'ultra high frequency band'],
         ['SHF', 'super high frequency band'],
-        ['HF', 'high frequency band'],
         ['VLF', 'very low frequency band'],
-        ['AVR', 'Atmel AVR 8-bit microcontroller family'],
-        ['PIC', 'PICmicro microcontroller family'],
-        ['55', 'good luck'],
-        ['WX', 'weather'],
-        ['RIT', 'receiver incremental tuning'],
-        ['SQL', 'squelch'],
+        ['MF', 'medium frequency band'],
+        ['ELF', 'extremely low frequency band'],
+        ['EHF', 'extremely high frequency band'],
+        ['THF', 'tremendously high frequency band'],
+        ['LF', 'low frequency band'],
+
+        // 🛠️ Equipment & Hardware
+        ['TRX', '"transceiver"'],
         ['PTT', 'push to talk'],
         ['MIC', 'microphone'],
-        ['HAM', 'ham radio operator'],
-        ['CIA', 'agency of the United States of America'],
-        ['FCC', 'agency of the United States of America'],
-        ['NASA', 'agency of the United States of America'],
-        ['FBI', 'agency of the United States of America'],
-        ['CPU', 'central processing unit'],
-        ['OHM', 'unit of electrical resistance'],
+        ['RIT', 'receiver incremental tuning'],
+        ['SQL', 'squelch'],
+        ['PA', 'power amplifier'],
+        ['PSU', 'power supply unit'],
         ['AMP', 'amplifier'],
+        ['BNC', 'radio frequency connector'],
+        ['SMA', 'radio frequency connector'],
+        ['ATU', 'antenna tuning unit'],
+        ['DSP', 'digital signal processor'],
+        ['LCD', 'liquid crystal display'],
+        ['LED', 'light emitting diode'],
+        ['GND', 'ground connection'],
+        ['IF', 'intermediate frequency'],
+        ['RF', 'radio frequency'],
+        ['AF', 'audio frequency'],
+        ['AGC', 'automatic gain control'],
+        ['SWR', 'standing wave ratio'],
+        ['FET', 'field-effect transistor'],
+        ['PCB', 'printed circuit board'],
+        ['VFO', 'variable frequency oscillator'],
+        ['RIG', 'radio transceiver'],
+        ['DIP', 'dual in-line package (electronics)'],
+        ['DDS', 'direct digital synthesis'],
+        ['TNC', 'terminal node controller'],
+        ['LNA', 'low-noise amplifier'],
+        ['ANT', 'antenna'],
+        ['RX', 'receiver'],
+        ['SMD', 'surface-mount device'],
+        ['LAN', 'local area network'],
+        ['WAN', 'wide area network'],
+        ['SSH', 'secure shell'],
+        ['FTP', 'file transfer protocol'],
+        ['GPS', 'global positioning system'],
+        ['PLC', 'programmable logic controller'],
+
+        // 🧠 Computing & Electronics
+        ['BIT', 'unit of information in computing'],
+        ['CPU', 'central processing unit'],
+        ['AVR', 'Atmel AVR 8-bit microcontroller family'],
+        ['PIC', 'PICmicro microcontroller family'],
+        ['CAL', '"calibration"'],
+        ['MCU', 'microcontroller unit'],
+        ['SPI', 'serial peripheral interface'],
+        ['PWM', 'pulse width modulation'],
+        ['ADC', 'analog to digital converter'],
+        ['DAC', 'digital to analog converter'],
+        ['TTL', 'transistor-transistor logic'],
+        ['ROM', 'read only memory'],
+        ['RAM', 'random access memory'],
+        ['IRQ', 'interrupt request'],
+        ['CLK', 'clock signal'],
+        ['BUS', 'data bus'],
+        ['CAP', 'capacitor or capacitance'],
+        ['ON', 'on state'],
+        ['OFF', 'off state'],
+
+        // ⚡ Electrical Units
+        ['OHM', 'unit of electrical resistance'],
         ['WATT', 'unit of power'],
         ['KW', 'kilowatt'],
-        ['BNC', 'radio frequency connector'],
+        ['DB', 'decibel'],
+        ['DBM', 'decibel-milliwatt'],
+        ['V', 'unit of electrical potential difference'],
+        ['A', 'unit of electrical current'],
+        ['VA', 'Voltampere, i.e. Watt'],
+
+        // 🏢 Organizations & Agencies
+        ['CIA', 'agency of the United States of America'],
+        ['FCC', 'agency of the United States of America'],
+        ['FBI', 'agency of the United States of America'],
+        ['ITU', 'International Telecommunication Union'],
+        ['ESA', 'European Space Agency'],
+        ['BBC', 'British Broadcasting Corporation'],
+        ['VOA', 'Voice of America'],
+        ['RFI', 'Radio France Internationale'],
+        ['WIA', 'Wireless Institute of Australia'],
+        ['FAA', 'Federal Aviation Administration'],
+
+        // 🌦️ Environment & Miscellaneous
+        ['WX', 'weather'],
+        ['UFO', '"unidentified flight object"'],
+        ['EMF', 'electromagnetic field'],
+        ['EMI', 'electromagnetic interference'],
+        ['RFI', 'radio frequency interference'],
+        ['ES', 'sporadic E propagation'],
+        ['UV', 'ultraviolet radiation'],
+        ['IR', 'infrared radiation'],
+        ['LOS', 'line of sight'],
+        ['LOS', 'loss of signal'],
+        ['AOS', 'acquisition of signal'],
+        ['LOS', 'line of sight'],
+        ['TCA', 'time of closest approach'],
+
+        ['BOB', 'given name'],
+        ['UDO', 'given name'],
+        ['ANN', 'given name'],
+        ['JOE', 'given name'],
+        ['MAX', 'given name'],
+        ['LEO', 'given name'],
+        ['ADA', 'given name'],
+        ['EVA', 'given name'],
+        ['IDA', 'given name'],
+        ['MIA', 'given name'],
+        ['AVA', 'given name'],
+        ['ZOE', 'given name'],
+        ['LIZ', 'given name'],
+        ['TOM', 'given name'],
+        ['SAM', 'given name'],
+        ['BEN', 'given name'],
+        ['RAY', 'given name'],
+        ['KAI', 'given name']
     ];
+    const [_, prefix, numbers, suffix] = splitCallsign(callsign);
+    const personal = numbers + suffix;
     for ([code, meaning] of commonTerms) {
-        if (callsign.includes(code)) {
+        if (personal.includes(code)) {
             finding.findings.push(`☝️ "${code}" hints at ${meaning}`);
             num_found += 1;
         }
     }
 
     finding.emoji = num_found == 0 ? '' : '☝️';
-    finding.interpretation = num_found == 0 ? good('none') : warning('warning');
+    finding.interpretation = num_found == 0 ? good('none') : (num_found == 1 ? warning('warning') : `${warning(num_found + ' warnings')}`);
     finding.explanation = '<p>These are terms and abbreviations that are commonly used in amateur radio and other radio services. Additionally, some globally understood terms have been included. The purpose of reporting these findings is to raise awareness.</p>';
     return finding;
 }

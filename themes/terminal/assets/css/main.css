@@ -1,5 +1,10 @@
-/* Fira Code: https://github.com/tonsky/FiraCode */
-@import url('https://cdn.staticdelivr.com/gfonts/css2?family=Fira+Code:wght@300..700&display=swap');
+@font-face {
+  font-family: 'Fira Code';
+  font-size: var(--font-size);
+  font-weight: 400;
+  font-variant-ligatures: contextual;
+  src: url('../fonts/Fira Code/FiraCode-VariableFont_wght.ttf');  
+}
 
 :root {
   --background: #ffffff;
@@ -49,20 +54,11 @@ header {
 /* Keep the rest of the original terminal stylesheet intact */
 
 body {
-  font-family:
-    "Fira Code",
-    "JetBrains Mono",
-    Monaco,
-    Consolas,
-     "Ubuntu Mono",
-    monospace;
-  font-size: var(--font-size);
-  font-weight: 400;
+  font-family: 'Fira Code', 'Courier New', Courier, monospace;
   line-height: var(--line-height);
   background-color: var(--background);
   color: var(--foreground);
   text-rendering: optimizeLegibility;
-  font-variant-ligatures: contextual;
   -webkit-overflow-scrolling: touch;
   -webkit-text-size-adjust: 100%;
   margin: 0;

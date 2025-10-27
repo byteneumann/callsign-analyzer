@@ -63,11 +63,15 @@ document.addEventListener('DOMContentLoaded', function () {
     html += addFinding(syntacticSymmetry(callsign));
     html += endSection();
     
-    html += beginSection('Phonology');
+    html += beginSection('Phonology (English spelling)');
+    html += addMetric(phoneticLength(callsign));
     html += addFinding(phoneticTranscriptEnglish(callsign));
-    html += addFinding(phoneticTranscriptIcao(callsign));
     //TODO three consonants, long spelling
     //TODO "alternative" phonetic alphabet
+    //TODO morse palindrom
+    html += beginSection('Phonology (NATO spelling alphabet)');
+    html += addMetric(phoneticLengthIcao(callsign));
+    html += addFinding(phoneticTranscriptIcao(callsign));
     html += endSection();
     
     html += beginSection('Operation');
