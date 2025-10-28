@@ -161,11 +161,11 @@ const icaoAlphabet = {
     '9': 'nine',
 };
 
-function transcribeIpa(s, separator='') {
+function transcribeIpa(s) {
     return s.map(c => phoneticDictionaryEnglish[c][0]);
 }
 
-function transcribeArpa(s, separator='') {
+function transcribeArpa(s) {
     return s.map(c => phoneticDictionaryEnglish[c][1].split(' '));
 }
 

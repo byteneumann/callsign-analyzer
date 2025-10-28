@@ -23,9 +23,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function addMetric(metric) {
     let html = '';
-    html += `<h3>${metric.emoji} ${metric.name}`;
+    html += `<h3>${metric.emoji} ${metric.name}: ${metric.value}`;
     if (metric.interpretation) {
-      html += `: ${metric.value} (${metric.interpretation})`;
+      html += ` (${metric.interpretation})`;
     }
     html += '</h3>';
     html += `<small>${metric.explanation}</small>`;
@@ -60,24 +60,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
     html += beginSection('Syntax');
     html += addMetric(syntacticLength(callsign));
-    html += addFinding(syntacticSymmetry(callsign));
+    html += addFinding(syntacticPatterns(callsign));
     html += endSection();
     
     html += beginSection('Phonology (English spelling)');
+    html += addFinding(phoneticTranscript(callsign));
     html += addMetric(phoneticLength(callsign));
-    html += addFinding(phoneticTranscriptEnglish(callsign));
-    //TODO three consonants, long spelling
+    html += addFinding(phoneticAnalysisEnglish(callsign));
     //TODO "alternative" phonetic alphabet
-    //TODO morse palindrom
     html += beginSection('Phonology (NATO spelling alphabet)');
-    html += addMetric(phoneticLengthIcao(callsign));
     html += addFinding(phoneticTranscriptIcao(callsign));
+    html += addMetric(phoneticLengthIcao(callsign));
+    html += addFinding(phoneticAnalysisIcao(callsign));
     html += endSection();
     
     html += beginSection('Operation');
     html += addFinding(operationOperatingSignals(callsign));
     html += addFinding(operationCommonTerms(callsign));
     //TODO misleading: sugar papa, whiskey = alcohol
+    html += endSection();
+
+    html += beginSection('Morse code');
+    html += addMetric(morseEncoding(callsign));
+    html += addMetric(morseLength(callsign));
+    html += addFinding(morsePatterns(callsign));
     html += endSection();
 
     return html;

@@ -5,6 +5,8 @@
 {{ $cssMain := resources.Get "css/main.css" }}
 <link rel="stylesheet" type="text/css" href="{{ $cssMain.RelPermalink }}">
 <script src="{{ "js/helper.js" | urlize | relURL }}" defer></script>
+<script src="{{ "js/lists.js" | urlize | relURL }}" defer></script>
 <script src="{{ "js/phonetic.js" | urlize | relURL }}" defer></script>
+<script src="{{ "js/morse.js" | urlize | relURL }}" defer></script>
 <script src="{{ "js/metrics.js" | urlize | relURL }}" defer></script>
 <script src="{{ "js/main.js" | urlize | relURL }}" defer></script>
