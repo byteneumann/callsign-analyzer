@@ -40,6 +40,6 @@ function reverse(s){
 }
 
 function splitCallsign(callsign) {
-    [callsign, prefix, numbers, suffix] = callsign.match(/([A-Z]+)([0-9]+)([A-Z]+)/)
+    [callsign, prefix, numbers, suffix] = callsign.match(/([0-9]?[A-Z]+)([0-9]+)([A-Z]+)/)
     return [callsign, prefix, numbers, suffix];
 }

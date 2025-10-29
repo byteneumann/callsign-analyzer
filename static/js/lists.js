@@ -430,5 +430,6 @@ const ambiguousTerms = [
     ['P', 'papa', 'being a father'],
     ['R', 'romeo', 'being a lover'],
     ['Z', 'zulu', 'ethnic group in Africa'],
+    ['T', 'tango', 'dance style'],
     ['BOT', 'automated computer progam', 'an insult']
 ]

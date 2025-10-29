@@ -283,7 +283,7 @@ function morseEncoding(callsign) {
     metric.name = 'Encoding';
 
     const callsign_morse = encodeMorse(callsign.split(''));
-    metric.value = callsign_morse.join(' ');
+    metric.value = `<span style="letter-spacing: 3  pt">${callsign_morse.join(' ')}</span>`;
 
     metric.emoji = '☝️';
     metric.explanation = '<p></p>';

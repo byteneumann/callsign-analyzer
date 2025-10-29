@@ -52,8 +52,9 @@ document.addEventListener('DOMContentLoaded', function () {
     return html;
   }
 
+  // calculate metrics and build report
   function run(callsign) {
-    // calculate metrics and build report
+    //TODO "alternative" phonetic spelling alphabet
     let html = '';
 
     html += showCallsign(callsign);
@@ -62,23 +63,22 @@ document.addEventListener('DOMContentLoaded', function () {
     html += addMetric(syntacticLength(callsign));
     html += addFinding(syntacticPatterns(callsign));
     html += endSection();
-    
+
     html += beginSection('Phonology (English spelling)');
     html += addFinding(phoneticTranscript(callsign));
     html += addMetric(phoneticLength(callsign));
     html += addFinding(phoneticAnalysisEnglish(callsign));
-    //TODO "alternative" phonetic alphabet
+
     html += beginSection('Phonology (NATO spelling alphabet)');
     html += addFinding(phoneticTranscriptIcao(callsign));
     html += addMetric(phoneticLengthIcao(callsign));
     html += addFinding(phoneticAnalysisIcao(callsign));
     html += endSection();
-    
+
     html += beginSection('Operation');
     html += addFinding(operationOperatingSignals(callsign));
     html += addFinding(operationCommonTerms(callsign));
     html += addFinding(operationAmbiguous(callsign));
-    //TODO misleading: sugar papa, whiskey = alcohol
     html += endSection();
 
     html += beginSection('Morse code');
