@@ -405,7 +405,6 @@ const commonTerms = [
     ['LEO', 'given name'],
     ['ADA', 'given name'],
     ['EVA', 'given name'],
-    ['IDA', 'given name'],
     ['MIA', 'given name'],
     ['AVA', 'given name'],
     ['ZOE', 'given name'],
@@ -416,5 +415,20 @@ const commonTerms = [
     ['RAY', 'given name'],
     ['KAI', 'given name'],
 
-    ['PHD', 'philosophiae doctor (Ph.D)']
+    ['PHD', 'philosophiae doctor (Ph.D)'],
+    ['TXT', 'common file ending for text files'],
+    ['PDF', 'common file ending for document files'],
+    ['EXE', 'common file ending for executables'],
+    ['WAV', 'common file ending for audio files'],
+    ['LAN', 'local area network'],
+    ['ABC', '(Latin) alphabet']
 ];
+
+const ambiguousTerms = [
+    ['SP', 'sugar papa', 'sugar daddy'],
+    ['W', 'whiskey', 'alcoholism'],
+    ['P', 'papa', 'being a father'],
+    ['R', 'romeo', 'being a lover'],
+    ['Z', 'zulu', 'ethnic group in Africa'],
+    ['BOT', 'automated computer progam', 'an insult']
+]

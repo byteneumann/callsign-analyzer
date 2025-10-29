@@ -50,10 +50,10 @@ function syntacticPatterns(callsign) {
         if (symmetry == 0) {
             finding.findings.push('✅ Prefix and suffix have equal length');
             num_good += 1;
-        } else if (symmetry < 0) {
+        } else if (symmetry > 0) {
             finding.findings.push(`⚠️ Suffix (${suffix}) is shorter than prefix (${prefix})`);
             num_bad += 1;
-        } else if (symmetry > 0) {
+        } else if (symmetry < 0) {
             finding.findings.push(`⚠️ Suffix (${suffix}) is longer than prefix (${prefix})`);
             num_bad += 1;
         }
@@ -70,10 +70,16 @@ function syntacticPatterns(callsign) {
             num_good += 1;
         }
     }
+    {
+        if (suffix.length > 1 && (suffix.match(new RegExp(`${suffix[0]}`, 'g') || []).length) == suffix.length) {
+            finding.findings.push(`⚠️ Suffix contains only the letter ${suffix[0]}`);
+            num_bad += 1;
+        }
+    }
 
     finding.emoji = num_bad == 0 ? '✅' : '⚠️';
     finding.interpretation = `${num_good}👍  ${num_bad}👎`;
-    finding.explanation = 'Patterns can have positive effects (e.g. easy to remember or spell) or negative effects (e.g. against expectation or similar to likely transmission errors).';
+    finding.explanation = 'Patterns can have positive effects (e.g. easy to remember or spell) or negative effects (e.g. unclear whether parts are missing).';
     return finding;
 };
 
@@ -246,9 +252,29 @@ function operationCommonTerms(callsign) {
         }
     }
 
-    finding.emoji = num_found == 0 ? '' : '☝️';
+    finding.emoji = num_found == 0 ? '✅' : '☝️';
     finding.interpretation = num_found == 0 ? good('none') : (num_found == 1 ? warning('warning') : `${warning(num_found + ' warnings')}`);
     finding.explanation = '<p>These are terms and abbreviations that are commonly used in amateur radio and other radio services. Additionally, some globally understood terms have been included. The purpose of reporting these findings is to raise awareness.</p>';
+    return finding;
+}
+
+function operationAmbiguous(callsign) {
+    let finding = new Finding();
+    finding.name = 'Ambigious terms';
+
+    let num_found = 0;
+    const [_, prefix, numbers, suffix] = splitCallsign(callsign);
+    const personal = numbers + suffix;
+    for ([code, decoded, meaning] of ambiguousTerms) {
+        if (personal.includes(code)) {
+            finding.findings.push(`☝️ "${code}" can be read as "${decoded}" and hint at ${meaning}`);
+            num_found += 1;
+        }
+    }
+
+    finding.emoji = num_found == 0 ? '✅' : '☝️';
+    finding.interpretation = num_found == 0 ? good('none') : (num_found == 1 ? warning('warning') : `${warning(num_found + ' warnings')}`);
+    finding.explanation = '<p>In addition to the previous categories, potentially ambiguous means are revealed here. This classification is highly subjective.</p>';
     return finding;
 }
 
@@ -330,10 +356,10 @@ function morsePatterns(callsign) {
         }
     }
     {
-        if ((suffix_morse.match(/·/g) || []).length == suffix_morse.replaceAll(' ', '').length) {
+        if (suffix.length > 1 && (suffix_morse.match(/·/g) || []).length == suffix_morse.replaceAll(' ', '').length) {
             finding.findings.push(`⚠️ Suffix only contains dits`);
             num_bad += 1;
-        } else if ((suffix_morse.match(/-/g) || []).length == suffix_morse.replaceAll(' ', '').length) {
+        } else if (suffix.length > 1 && (suffix_morse.match(/-/g) || []).length == suffix_morse.replaceAll(' ', '').length) {
             finding.findings.push(`⚠️ Suffix only contains dahs`);
             num_bad += 1;
         }

@@ -77,6 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
     html += beginSection('Operation');
     html += addFinding(operationOperatingSignals(callsign));
     html += addFinding(operationCommonTerms(callsign));
+    html += addFinding(operationAmbiguous(callsign));
     //TODO misleading: sugar papa, whiskey = alcohol
     html += endSection();
 
