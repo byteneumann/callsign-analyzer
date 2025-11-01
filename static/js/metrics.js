@@ -89,7 +89,7 @@ function phoneticTranscript(callsign) {
 
     const callsign_tokens = callsign.split('');
     const ipaTranscript = transcribeIpa(callsign_tokens);
-    finding.findings.push(`IPA transcript: /${ipaTranscript.join(' ')}/`);
+    finding.findings.push(`IPA transcript: <span style="font-family: monospace;">/${ipaTranscript.join(' ')}/</span>`);
 
     finding.emoji = '💡';
     finding.interpretation = '';
@@ -103,7 +103,7 @@ function phoneticTranscriptIcao(callsign) {
 
     const callsign_icao = toIcao(callsign.split(''));
     const ipaTranscript = transcribeIpa(callsign_icao);
-    finding.findings.push(`IPA transcript: /${ipaTranscript.join(' ')}/`);
+    finding.findings.push(`IPA transcript: <span style="font-family: monospace;">/${ipaTranscript.join(' ')}/</span>`);
 
     finding.emoji = '💡';
     finding.interpretation = '';
@@ -267,14 +267,18 @@ function operationAmbiguous(callsign) {
     const personal = numbers + suffix;
     for ([code, decoded, meaning] of ambiguousTerms) {
         if (personal.includes(code)) {
-            finding.findings.push(`☝️ "${code}" can be read as "${decoded}" and hint at ${meaning}`);
+            if (decoded) {
+            finding.findings.push(`☝️ "${code}" can be read as "${decoded}" and hints at ${meaning}`);
+            } else {
+                finding.findings.push(`☝️ "${code}" hints at ${meaning}`);
+            }
             num_found += 1;
         }
     }
 
     finding.emoji = num_found == 0 ? '✅' : '☝️';
     finding.interpretation = num_found == 0 ? good('none') : (num_found == 1 ? warning('warning') : `${warning(num_found + ' warnings')}`);
-    finding.explanation = '<p>In addition to the previous categories, potentially ambiguous means are revealed here. This classification is highly subjective.</p>';
+    finding.explanation = '<p>In addition to the previous categories, potentially ambiguous means are revealed here. This classification is highly subjective. In parts, it is designed to protect you from unpleasant surprises.</p>';
     return finding;
 }
 
@@ -283,7 +287,7 @@ function morseEncoding(callsign) {
     metric.name = 'Encoding';
 
     const callsign_morse = encodeMorse(callsign.split(''));
-    metric.value = `<span style="letter-spacing: 3  pt">${callsign_morse.join(' ')}</span>`;
+    metric.value = `<span style="letter-spacing: 4px; font-variant: none; padding-left: 1em;">${callsign_morse.join(' ')}</span>`;
 
     metric.emoji = '☝️';
     metric.explanation = '<p></p>';

@@ -16,22 +16,12 @@
         Here, <em>callsign</em> refers to an amateur radio callsigns.
         This tool is designed for ham radio operators.
         Callsigns are (to large extent) formed according to the following structure:
-        <table>
-            <trh>
-                <th>Format</th><th>Quantity</th><th>Part</th>
-            </tr>
-            <tr>
-                <td>Arabic number</td><td>at the beginning or not at all</td><td>country prefix</td>
-            </tr>
-            <tr>
-                <td>Latin letter(s)</td><td>at least one</td><td>country prefix</td>
-            </tr>
-            <tr>
-                <td>Arabic number</td><td>one except for special callsigns</td><td>number</td>
-            </tr>
-            <tr>
-                <td>Latin letter(s)</td><td>mostly two or three letters</td><td>suffix</td>
-            </tr>
+        <table style="text-align: left;">
+            <tr><th>Example 1</th><td colspan="2">PY</td><td>1</td><td>V</td></tr>
+            <tr><th>Example 2</th><td colspan="2">2A</td><td>7</td><td>EG</td></tr>
+            <tr><th>Part</th><td colspan="2">country prefix</td><td>number  </td><td>suffix</td></tr>
+            <tr><th>Format</th><td>Arabic number</td><td>Latin letter(s)</td><td>Arabic number</td><td>Latin letter(s)</td></tr>
+            <tr><th>Quantity</th><td>at the beginning or not at all</td><td>at least one</td><td>one except for special callsigns</td><td>mostly two or three letters</td></tr>
         </table>
     The meaning of each part differs across countries and is irrelevant here.
     </p>
@@ -43,7 +33,7 @@
     </p>
     <h2>How is it done?</h2>
     <p>
-        We apply techniques from the field of Natural Language Processing (NLP).
+        We apply techniques from the field of Linguistics.
         The callsign is not analyzed based on syntax alone.
         Rather, it is translated into a phonetic transcription.
         This allows us to provide pronunciation-related information as well.
